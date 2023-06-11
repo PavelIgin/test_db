@@ -1,4 +1,4 @@
-from db import database_init, get_connection
+from db import database_init, get_connection, get_cursor
 
 
 def get_queryset(number, cursor):
@@ -35,7 +35,7 @@ def choice_number(range_list, error_message):
     try:
         number = int(input())
     except:
-        print('Введите число')
+        print(error_message)
         number = choice_number(range_list, error_message)
     if number not in range_list:
         print(error_message)
@@ -44,10 +44,14 @@ def choice_number(range_list, error_message):
 
 
 if __name__ == '__main__':
-    database_init()
-    cursor = get_connection()
+    connection = get_connection()
+    cursor = get_cursor(connection)
+    database_init(cursor)
+
     print_message()
     range_list = list(range(1, 4))
     error_message = f'Выберите число от {range_list[0]} до {range_list[-1]}'
     number = choice_number(range_list, error_message)
     queryset = get_queryset(number, cursor)
+    connection.close()
+    cursor.close()

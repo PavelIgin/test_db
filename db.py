@@ -10,9 +10,7 @@ env = Env()
 env.read_env()
 
 
-def database_init():
-    cursor = get_connection()
-
+def database_init(cursor):
     try:
         create_database(cursor)
     except Error:
@@ -33,9 +31,11 @@ def get_connection():
                                   host=env.str('HOST_POSTGRES'),
                                   port=env.str('PORT_POSTGRES'))
     connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-    cursor = connection.cursor()
-    return cursor
+    return connection
 
+
+def get_cursor(connection):
+    return connection.cursor()
 
 def create_database(cursor):
     sql_create_database = 'CREATE DATABASE bd1'
